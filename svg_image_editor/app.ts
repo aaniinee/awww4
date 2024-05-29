@@ -9,45 +9,59 @@ interface Rectangle {
 class SvgImage {
   private svgElement: SVGSVGElement;
   private rectangles: Rectangle[] = [];
+  private selectedRectangle: Rectangle | null = null;
+  // private selectedIndex: number | null = null;
 
   constructor(svgElement: SVGSVGElement) {
     this.svgElement = svgElement;
     this.svgElement.addEventListener('mousedown', this.startDrawing.bind(this));
     this.svgElement.addEventListener('mouseup', this.finishDrawing.bind(this));
-    this.svgElement.addEventListener('click', this.removeRectangle.bind(this));
+    this.svgElement.addEventListener('click', this.selectRectangle.bind(this));
+    document.getElementById('removeRectangleButton')!.addEventListener('click', this.removeSelectedRectangle.bind(this));
   }
-
+  
   addRectangle(rect: Rectangle) {
-    console.log("add");
-    this.rectangles.push(rect);
-    this.drawRectangle(rect);
+    if(rect.height > 0 && rect.width > 0){  
+      this.rectangles.push(rect);
+      this.drawRectangle(rect);
+    }
   }
-
-  removeRectangle(event: MouseEvent) {
-    const target = event.target as SVGRectElement;
+  
+  removeSelectedRectangle() {
     console.log("rm");
-    if (target.nodeName === 'rect') {
-      // const rectIndex = this.rectangles.findIndex(rect => rect === JSON.parse(target.dataset.rect!));
-      const rectIndex = this.rectangles.findIndex(rect => rect === target['data-rect']);
+    if (this.selectedRectangle) {
+      console.log(`rm3: ${JSON.stringify(this.selectedRectangle)}`);
+      console.log(`rm4: ${JSON.stringify(this.rectangles)}`);
+      // console.log(`rm4: ${this.rectangles}`);
+      const rectIndex = this.rectangles.findIndex(rect => JSON.stringify(rect) == JSON.stringify(this.selectedRectangle));
+      console.log(`${rectIndex}`);
       if (rectIndex !== -1) {
-        this.rectangles.splice(rectIndex, 1);
-        
         console.log("rm2");
-        target.remove();
+        this.rectangles.splice(rectIndex, 1);
+        this.svgElement.querySelector(`[data-rect='${JSON.stringify(this.selectedRectangle)}']`)!.remove();
+        this.selectedRectangle = null;
+        (document.getElementById('removeRectInfo') as HTMLInputElement).value = '';
       }
     }
   }
 
+  selectRectangle(event: MouseEvent) {
+    const target = event.target as SVGRectElement;
+    if (target.nodeName === 'rect') {
+      this.selectedRectangle = JSON.parse(target.dataset.rect!);
+      console.log(`sr1 ${JSON.stringify(this.selectedRectangle)}`);
+      (document.getElementById('removeRectInfo') as HTMLInputElement).value = `x: ${this.selectedRectangle!.x}, y: ${this.selectedRectangle!.y}, width: ${this.selectedRectangle!.width}, height: ${this.selectedRectangle!.height}, fill: ${this.selectedRectangle!.fill}`;
+    }console.log(`sr ${JSON.stringify(this.selectedRectangle)}`);
+  }
+
   drawRectangle(rect: Rectangle) {
-    console.log("draw");
     const rectElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     rectElement.setAttribute('x', rect.x.toString());
     rectElement.setAttribute('y', rect.y.toString());
     rectElement.setAttribute('width', rect.width.toString());
     rectElement.setAttribute('height', rect.height.toString());
     rectElement.setAttribute('fill', rect.fill);
-    // rectElement.dataset.rect = JSON.stringify(rect);
-    rectElement['data-rect'] = rect;
+    rectElement.dataset.rect = JSON.stringify(rect); // Store rect data in data attribute
     this.svgElement.appendChild(rectElement);
   }
 
@@ -56,14 +70,12 @@ class SvgImage {
   private isDrawing = false;
 
   startDrawing(event: MouseEvent) {
-    console.log("sd");
     this.startX = event.offsetX;
     this.startY = event.offsetY;
     this.isDrawing = true;
   }
 
   finishDrawing(event: MouseEvent) {
-    console.log("fd");
     if (this.isDrawing) {
       const endX = event.offsetX;
       const endY = event.offsetY;
