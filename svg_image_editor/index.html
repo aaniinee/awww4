@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SVG Image Editor</title>
+  <style>
+    #drawingArea {
+      border: 1px solid black;
+      width: 800px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+  <h1>SVG Image Editor</h1>
+  <form id="rectangleForm">
+    <label for="fillColor">Fill Color:</label>
+    <input type="color" id="fillColor" name="fillColor" value="#ff0000">
+    <br>
+    <label for="x1">x1:</label>
+    <input type="number" id="x1" name="x1">
+    <label for="y1">y1:</label>
+    <input type="number" id="y1" name="y1">
+    <label for="x2">x2:</label>
+    <input type="number" id="x2" name="x2">
+    <label for="y2">y2:</label>
+    <input type="number" id="y2" name="y2">
+    <button type="button" id="addRectangleButton">Add Rectangle</button>
+  </form>
+  <svg id="drawingArea"></svg>
+  <script src="dist/app.js"></script>
+</body>
+</html>
