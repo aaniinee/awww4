@@ -1,0 +1,5 @@
+uvicorn, websocket, fastapi
+python -m uvicorn server:app --reload
+npm install -g live-server
+
+do pierwszego: liveserver

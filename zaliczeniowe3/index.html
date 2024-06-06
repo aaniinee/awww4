@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wyświetlanie obrazków za pomocą WebSocketów</title>
+    <style>
+        #imageContainer img {
+            width: 200px;
+            height: auto;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ostatnio dodane obrazki:</h1>
+    <div id="imageContainer"></div>
+
+    <script>
+        const imageContainer = document.getElementById('imageContainer');
+
+        const socket = new WebSocket('ws://localhost:8000/ws/images');
+
+        socket.onopen = function(event) {
+            console.log('Połączono z serwerem WebSocket');
+        };
+
+        socket.onmessage = function(event) {
+            const image = document.createElement('img');
+            image.src = event.data;
+            imageContainer.appendChild(image);
+        };
+
+        socket.onclose = function(event) {
+            console.log('Połączenie z serwerem WebSocket zostało zamknięte');
+            // Opcjonalnie: Ponowne połączenie
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        };
+
+        socket.onerror = function(error) {
+            console.error('Wystąpił błąd połączenia z serwerem WebSocket:', error);
+        };
+    </script>
+</body>
+</html>
