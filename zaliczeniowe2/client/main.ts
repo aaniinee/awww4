@@ -3,6 +3,8 @@ const imageContainer = document.getElementById("image-container") as HTMLElement
 function createImageBox() {
     const box = document.createElement("div");
     box.classList.add("image-box");
+    box.style.width = "300px";
+    box.style.height = "300px";
 
     const spinner = document.createElement("div");
     spinner.classList.add("loading");

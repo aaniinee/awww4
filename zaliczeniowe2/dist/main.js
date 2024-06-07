@@ -3,6 +3,8 @@ var imageContainer = document.getElementById("image-container");
 function createImageBox() {
     var box = document.createElement("div");
     box.classList.add("image-box");
+    box.style.width = "300px";
+    box.style.height = "300px";
     var spinner = document.createElement("div");
     spinner.classList.add("loading");
     box.appendChild(spinner);
@@ -32,7 +34,6 @@ function fetchImage(box) {
     fetch("http://localhost:8000/image")
         .then(function (response) {
         if (!response.ok) {
-            console.log("nieok");
             throw new Error("Network response was not ok");
         }
         return response.json();

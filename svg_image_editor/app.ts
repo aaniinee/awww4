@@ -32,6 +32,14 @@ class SvgImage {
     if (this.selectedRectangle) {
       console.log(`rm3: ${JSON.stringify(this.selectedRectangle)}`);
       console.log(`rm4: ${JSON.stringify(this.rectangles)}`);
+
+      let svg = '<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">';
+      this.rectangles.forEach(rect => {
+        svg += `<rect x="${rect.x}" y="${rect.y}" width="${rect.width}" height="${rect.height}" fill="${rect.fill}" />`;
+      });
+      svg += '</svg>';
+      const jsonData = JSON.stringify(svg);
+      console.log(jsonData);
       // console.log(`rm4: ${this.rectangles}`);
       const rectIndex = this.rectangles.findIndex(rect => JSON.stringify(rect) == JSON.stringify(this.selectedRectangle));
       console.log(`${rectIndex}`);
